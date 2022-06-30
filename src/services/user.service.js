@@ -12,7 +12,8 @@ class UserService{
     static async getUser(inId, inPassword){ //log in
         const user = await UserSchema.findByPk(inId)
         if(user){
-            if(user.password === inPassword){
+            let passwordApproved = await bcrypt.compare(inPassword, user.password)
+            if(passwordApproved){
                 let sendUser = { //this is to avoid send sensitive info as password or incomeSource
                     "idUser": user.idUser,
                     "email": user.email,

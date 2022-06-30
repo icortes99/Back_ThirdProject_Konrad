@@ -1,4 +1,5 @@
 const express = require('express')
+const bcrypt = require('bcrypt')
 const UserService = require('../services/user.service')
 const usersRouter = express.Router()
 const {isValidationError, formatRequestError} = require('../helpers/error.helper')
@@ -16,6 +17,9 @@ usersRouter
 .route('/signup')
 .post(async (req, res)=>{
     const userInfo = req.body
+    let passwordTmp = userInfo.password
+    const crypt = await bcrypt.genSalt(10)
+    userInfo.password = await bcrypt.hash(passwordTmp, crypt)
 
     try {
         const obj = await UserService.addUser(userInfo)

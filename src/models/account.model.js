@@ -3,13 +3,9 @@ const sequelize = require('../helpers/connection.helper')
 
 const AccountSchema = sequelize.define('account', {
     accountNumber: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.BIGINT,
         allowNull: false,
         primaryKey: true
-    },
-    currency: {
-        type: Sequelize.STRING,
-        allowNull: false
     },
     accountBalance: {
         type: Sequelize.FLOAT,

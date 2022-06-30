@@ -1,5 +1,7 @@
 const UserSchema = require('../models/user.model')
 const sequelize = require('../helpers/connection.helper')
+const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt')
 
 class UserService{
     static async getAllUsers(){
@@ -7,12 +9,30 @@ class UserService{
         return users
     }
 
-    static async getUser(id){
-        const user = await UserSchema.findByPk(id)
-        return user
+    static async getUser(inId, inPassword){ //log in
+        const user = await UserSchema.findByPk(inId)
+        if(user){
+            if(user.password === inPassword){
+                let sendUser = { //this is to avoid send sensitive info as password or incomeSource
+                    "idUser": user.idUser,
+                    "email": user.email,
+                    "name": user.name,
+                    "lastname": user.lastname,
+                    "photo": user.photo
+                }
+                let auth = jwt.sign(sendUser, 'admin123',{
+                    expiresIn: '1d'
+                })
+                return({status: true, msg: auth})
+            } else {
+                return({ status: false, msg: 'Wrong password'})
+            }
+        } else {
+            return({ status: false, msg: 'User does not exist'})
+        }
     }
 
-    static async addUser(newUserInfo){
+    static async addUser(newUserInfo){ //sign up
         const newUser = await UserSchema.create(newUserInfo)
         return newUser
     }

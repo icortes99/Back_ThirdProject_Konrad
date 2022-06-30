@@ -15,6 +15,14 @@ const CurrencySchema = sequelize.define('currency', {
     colonValue: {
         type: Sequelize.FLOAT,
         allowNull: false
+    },
+    prefix: { //this is to display just before the IBAN's
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+    symbol: { //This is for $, ₡, €, etc
+        type: Sequelize.STRING,
+        allowNull: false
     }
 })
 

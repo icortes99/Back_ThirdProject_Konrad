@@ -2,14 +2,15 @@ const express = require('express')
 const AccountService = require('../services/account.service')
 const accountRouter = express.Router()
 const {isValidationError, formatRequestError} = require('../helpers/error.helper')
+const authenticationMiddleware = require('../middleware/authenticate.middleware')
 
 accountRouter
 .route('/')
-.get(async (req, res)=>{
+.get(authenticationMiddleware, async (req, res)=>{
     const listAccounts = await AccountService.getAllAccounts()
     res.send(listAccounts) //res.json(listAccounts)
 })
-.post(async (req, res)=>{
+.post(authenticationMiddleware, async (req, res)=>{
     const accountInfo = req.body
 
     try {

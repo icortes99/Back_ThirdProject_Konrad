@@ -17,7 +17,7 @@ class TransactionLocalService{
         return localTransactionsReceived
     }
 
-    static async getAllLocalTransactions(inIdUser){
+    static async getAllLocalTransactionsUser(inIdUser){
         const localTransactionsReceived = await TransactionLocalSchema.findAll({ where: {receiver: inIdUser}})
         const localTransactionsSent = await TransactionLocalSchema.findAll({ where: {sender: inIdUser}})
         const allLocalTransactions = localTransactionsReceived

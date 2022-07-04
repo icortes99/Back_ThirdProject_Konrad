@@ -16,10 +16,12 @@ class UserService{
             if(passwordApproved){
                 let sendUser = { //this is to avoid send sensitive info as password or incomeSource
                     "idUser": user.idUser,
+                    "password": user.password,
                     "email": user.email,
                     "name": user.name,
                     "lastname": user.lastname,
-                    "photo": user.photo
+                    "photo": user.photo,
+                    "incomeSource": user.incomeSource
                 }
                 let auth = jwt.sign(sendUser, 'admin123',{
                     expiresIn: '1d'

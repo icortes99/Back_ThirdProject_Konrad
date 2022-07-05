@@ -38,7 +38,7 @@ usersRouter
     const credentials = req.body
 
     try {
-        const userToken = await UserService.getUser(credentials.idUser, credentials.password)
+        const userToken = await UserService.getUser(credentials.email, credentials.password)
         userToken.status ? res.json(userToken.msg) : res.send(userToken.msg).status(403)
     } catch (err) {
         res
@@ -52,7 +52,7 @@ usersRouter
 .route('/:id')
 .get(async (req, res)=>{
     const id = req.params.id
-    const user = await UserService.getUser(id)
+    const user = await UserService.getInfoUser(id)
     user ? res.send(user) : res.send(400).status('Not found')
 })
 .put(async (req, res)=>{

@@ -22,7 +22,6 @@ class UserService{
             let passwordApproved = await bcrypt.compare(inPassword, user.password)
             if(passwordApproved){
                 let sendUser = {
-                    "idUser": user.idUser,
                     "email": user.email
                 }
                 let userAccounts =  await AccountService.getAccountsByUser(user.idUser)
@@ -35,6 +34,7 @@ class UserService{
                 })
                 let objUser = {
                     "token": auth,
+                    "idUser": user.idUser,
                     "name": user.name,
                     "lastname": user.lastname,
                     "photo": user.photo,

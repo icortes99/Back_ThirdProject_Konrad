@@ -1,25 +1,25 @@
-const accounsService = require('../services/account.service')
+const AccountSchema = require('../models/account.model')
 
-const generatorIBAN = ()=>{
+const generatorIBAN = async()=>{
     const max = 99999999999999999999
     let number
-    let repeated = false
-    const accountList = await accounsService.getAllAccounts()
-    let flag = true
+    let repeated = true
 
-    while (flag) {
-        number = Math.floor(Math.random() * max)
+    while (repeated) {
+        number = Math.floor(Math.random() * max) + 10000000000000000000
 
-        accountList.forEach((x)=>{
-            if(x.accountNumber === number){
-                repeated = true
-            }
-        })
+        let temp = JSON.stringify(number)
 
-        if(!repeated){flag = false}
+        const accountList = await AccountSchema.findByPk(temp)
+
+        if(accountList === null){
+            repeated = false
+        }
     }
 
-    return number
+    let stringNumber = JSON.stringify(number)
+
+    return stringNumber
 }
 
 module.exports = generatorIBAN

@@ -49,4 +49,12 @@ accountRouter
     res.send(deletedAccount)
 })
 
+accountRouter
+.route('/verify/:id')
+.get(async (req, res)=>{
+    const accountID = req.params.id
+    const account = await AccountService.getUserByNumber(accountID)
+    account ? res.json(account) : res.send('Account not found').status(404)
+})
+
 module.exports = accountRouter

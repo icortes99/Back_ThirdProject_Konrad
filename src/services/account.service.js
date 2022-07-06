@@ -1,5 +1,7 @@
 const sequelize = require('../helpers/connection.helper')
 const AccountSchema = require('../models/account.model')
+const UserSchema = require('../models/user.model')
+const generatorIBAN = require('../helpers/generatorIBAN.helper')
 
 class AccountService{
     static async getAllAccounts(){
@@ -12,8 +14,22 @@ class AccountService{
         return accounts
     }
 
+    static async getUserByNumber(inAccNumber){
+        const account = await AccountSchema.findByPk(inAccNumber)
+        const user = await UserSchema.findByPk(account.userIdUser)
+        return user
+    }
+
     static async addAccount(newAccountInfo){
-        const newAccount = await AccountSchema.create(newAccountInfo)
+        let newNumber = await generatorIBAN()
+        const finallyAccount = {
+            "accountNumber": newNumber,
+            "accountBalance": newAccountInfo.accountBalance,
+            "userIdUser": newAccountInfo.userIdUser,
+            "currencyCode": newAccountInfo.currencyCode
+        }
+        console.log('finally account: ', JSON.stringify(finallyAccount))
+        const newAccount = await AccountSchema.create(finallyAccount)
         return newAccount
     }
 

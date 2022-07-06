@@ -3,7 +3,7 @@ const sequelize = require('../helpers/connection.helper')
 
 const AccountSchema = sequelize.define('account', {
     accountNumber: {
-        type: Sequelize.BIGINT,
+        type: Sequelize.STRING,
         allowNull: false,
         primaryKey: true
     },

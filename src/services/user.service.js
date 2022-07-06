@@ -20,22 +20,17 @@ class UserService{
         if(user){
             let passwordApproved = await bcrypt.compare(inPassword, user.password)
             if(passwordApproved){
-                let sendUser = { //this is to avoid send sensitive info as password or incomeSource
+                let sendUser = {
                     "idUser": user.idUser,
-                    "password": user.password,
-                    "email": user.email,
-                    "name": user.name,
-                    "lastname": user.lastname,
-                    "photo": user.photo,
-                    "incomeSource": user.incomeSource
+                    "email": user.email
                 }
-                let userAccounts = (AccountService.getAccountsByUser(user.idUser))
-                let tlocals = (TransactionLocal.getAllLocalTransactions(user.idUser))
-                let tfreceive = (TransactionForeignReceive.getForeignReceivedTransactionsUser(user.idUser))
-                let tfsend = (TransactionForeignSend.getForeignSendTransactionsUser(user.idUser))
+                let userAccounts =  await AccountService.getAccountsByUser(user.idUser)
+                let tlocals = await TransactionLocal.getAllLocalTransactions(user.idUser)
+                let tfreceive = await TransactionForeignReceive.getForeignReceivedTransactionsUser(user.idUser)
+                let tfsend = await TransactionForeignSend.getForeignSendTransactionsUser(user.idUser)
                 let allTransaction = [tlocals, tfreceive, tfsend]
                 let auth = jwt.sign(sendUser, 'admin123',{
-                    expiresIn: '1d'
+                    expiresIn: '3d'
                 })
                 let objUser = {
                     "token": auth,
@@ -103,8 +98,46 @@ class UserService{
     }
 
     static async addUser(newUserInfo){ //sign up
-        const newUser = await UserSchema.create(newUserInfo)
-        return newUser
+        const verifyID = await UserSchema.findByPk(newUserInfo.idUser)
+        const verifyEmail = await this.getInfoUserEmail(newUserInfo.email)
+
+        if(verifyEmail == 'user does not exist'){
+            if(verifyID == null){
+                const newUser = await UserSchema.create(newUserInfo)
+
+                if(newUser){
+                    const acc1 = {
+                        "accountBalance": 100000,
+                        "userIdUser": newUser.idUser,
+                        "currencyCode": 4
+                    }
+
+                    console.log(JSON.stringify('account object 1', acc1))
+
+                    const acc2 = {
+                        "accountBalance": 250,
+                        "userIdUser": newUser.idUser,
+                        "currencyCode": 14
+                    }
+
+                    try {
+                        const accountAdd1 = await AccountService.addAccount(acc1)
+                    } catch (err) {
+                        return err
+                    }
+                    try {
+                        const accountAdd2 = await AccountService.addAccount(acc2)
+                    } catch (err) {
+                        return err
+                    }
+                    return newUser
+                }
+            } else {
+                return 'ID already used'
+            }
+        } else {
+            return 'Email already exists'
+        }
     }
 
     static async deleteUser(id){

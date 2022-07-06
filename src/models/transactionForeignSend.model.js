@@ -22,6 +22,10 @@ const TransactionForeignSend = sequelize.define('transactionForeignSend', {
     transactionDate: {
         type: Sequelize.DATE(6), //up to 6 digits of precision
         allowNull: false
+    },
+    description: { //this is to storage service payments, allow null to difference between transact and bill
+        type: Sequelize.STRING,
+        allowNull: true
     }
 })
 

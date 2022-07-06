@@ -3,6 +3,7 @@ const AccountService = require('./account.service')
 const TransactionForeignReceive = require('./transactionForeignReceive.service')
 const TransactionForeignSend = require('./transactionForeignSend.service')
 const TransactionLocal = require('./transactionLocal.service')
+const CurrencyService = require('./currency.service')
 const sequelize = require('../helpers/connection.helper')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
@@ -41,7 +42,9 @@ class UserService{
                     "accounts": userAccounts,
                     "transactions": allTransaction
                 }
-                return({status: true, msg: objUser})
+                let objCurrencies = await CurrencyService.getAllCurrencies()
+                let bigFetch = [objUser, objCurrencies]
+                return({status: true, msg: bigFetch})
             } else {
                 return({ status: false, msg: 'Wrong password'})
             }

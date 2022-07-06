@@ -5,7 +5,8 @@ const TransactionForeignReceive = sequelize.define('transactionForeignReceive', 
     idTransaction: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        primaryKey: true
+        primaryKey: true,
+        autoIncrement: true
     },
     sender: {
         type: Sequelize.INTEGER,

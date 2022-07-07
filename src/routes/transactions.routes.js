@@ -104,8 +104,14 @@ transactionsRouter
 transactionsRouter
 .route('/receive')
 .get(async (req, res)=>{
-    const list = await TransactionForeignReceiveService.getForeignSendTransactions()
-    res.json(list)
+    try {
+        const list = await TransactionForeignReceiveService.getForeignReceivedTransactions()
+        res.json(list)
+    } catch (err) {
+        res
+        .status(isValidationError(err) ? 400 : 500)
+        .send(formatRequestError(err))
+    }
 })
 .post(async (req, res)=>{
     const info = req.body

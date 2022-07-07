@@ -111,7 +111,7 @@ transactionsRouter
     const info = req.body
 
     try {
-        const obj = await TransactionForeignReceiveService.addForeignSendTransactions(info)
+        const obj = await TransactionForeignReceiveService.addForeignReceivedTransactions(info)
         obj !== null ? res.send(obj) : res.sendStatus(404)
     } catch (err) {
         res

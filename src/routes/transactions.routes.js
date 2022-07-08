@@ -2,6 +2,7 @@ const express = require('express')
 const TransactionLocalService = require('../services/transactionLocal.service')
 const TransactionForeignReceiveService = require('../services/transactionForeignReceive.service')
 const TransactionForeignSendService = require('../services/transactionForeignSend.service')
+const AccountService = require('../services/account.service')
 const transactionsRouter = express.Router()
 const {isValidationError, formatRequestError} = require('../helpers/error.helper')
 
@@ -21,6 +22,9 @@ transactionsRouter
 })
 .post(async (req, res)=>{
     const localTransactionInfo = req.body
+    const accountRef = localTransactionInfo.receiverAccount
+    const userRef = await AccountService.getUserByNumber(accountRef)
+    localTransactionInfo.receiver = userRef.idUser
 
     try {
         const obj = await TransactionLocalService.addLocalTransaction(localTransactionInfo)

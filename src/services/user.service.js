@@ -25,7 +25,7 @@ class UserService{
                     "email": user.email
                 }
                 let userAccounts =  await AccountService.getAccountsByUser(user.idUser)
-                let tlocals = await TransactionLocal.getAllLocalTransactions(user.idUser)
+                let tlocals = await TransactionLocal.getAllLocalTransactionsUser(user.idUser)
                 let tfreceive = await TransactionForeignReceive.getForeignReceivedTransactionsUser(user.idUser)
                 let tfsend = await TransactionForeignSend.getForeignSendTransactionsUser(user.idUser)
                 let allTransaction = [tlocals, tfreceive, tfsend]
